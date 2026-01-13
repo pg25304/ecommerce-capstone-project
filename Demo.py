@@ -21,19 +21,28 @@ order_service = OrderService(order_repo, product_repo)
 #setup controllers
 user_controller = UserController(user_service)
 
-#register a new user
-new_user = user_controller.register_user(1, "jack@example.com", "securepassword")
+# python
+# In `Demo.py` replace the registration block with this
+try:
+    new_user = user_service.register(1, "jack@example.com", "securepassword")
+except ValueError as e:
+    print("User registration failed:", e)
+    import sys
+    sys.exit(1)
 
-#Add products
-product_service.add_product(101, "Laptop", 999.99, 10)
-product_service.add_product(102, "Smartphone", 499.99, 20)
+# extra sanity check in case the service returns an error message string
+if new_user is None or isinstance(new_user, str):
+    print("User registration failed:", new_user)
+    import sys
+    sys.exit(1)
 
-#create an order
+# proceed to create the order using the real User object
 order = order_service.create_order(
     order_id=5001,
     user=new_user,
     cart_items=[(101, 1), (102, 2)]
 )
+
 
 print("Order created for:", order.user.email)
 for product, qty in order.items:

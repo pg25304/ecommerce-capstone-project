@@ -9,15 +9,28 @@ class UserController:
     #This defines a method named register_user, which acts as a controller action for user registration.
     #It takes user_id, email, and password as input parameters coming from the external interface (UI, API, etc.)."""
         def register_user(self, user_id, email, password):
-            #This method calls the register_user method of UserService,
-            return self.user_service.register(user_id, email, password)
+            try:
+                #This method calls the register_user method of UserService,
+                return self.user_service.register(user_id, email, password)
+            except ValueError as e:
+                return f"Registration failed: {e}"  # Handle input validation errors
+            except Exception as e:
+                return f"Unexpected error: {e}"  # Handle unexpected issues
+
+
     #This calls the register method of UserService, passing the user_id, email, and password.
     #The result (the registered User object) is returned to the caller (e.g., API or UI).
     #UserService handles the actual business logic for registering the user.
         def login_user(self, email, password):
-        #This defines a method named login_user, which acts as a controller action for user authentication (logging in).
-        #It takes email and password as input parameters coming from the external interface (UI or API).
-         return self.user_service.login(email, password)
+
+            try:
+                if self.user_service.login(email, password):
+                    return f"Login successful for {email}"
+                else:
+                    return "Invalid email or password"
+            except Exception as e:
+                return f"Login error: {e}"
+
 
 #This calls the login method of UserService, passing the email and password.
 #The result (True for successful login or False for a failed login) is returned to the caller (e.g., API or UI).

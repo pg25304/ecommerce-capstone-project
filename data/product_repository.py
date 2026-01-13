@@ -1,7 +1,9 @@
 #product repository.py
 #pg25304 UoEO - Data Access Layer - product catalog - product repository
 #A repository class for managing product-related operations.
-class ProductRepository:
+from data.base_repository import BaseRepository
+
+class ProductRepository(BaseRepository):
     #The constructor method (__init__) is called when a new ProductRepository object is created.
     #It initializes the object, specifically the in-memory storage for products.
     def __init__(self):

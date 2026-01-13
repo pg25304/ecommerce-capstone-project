@@ -1,7 +1,8 @@
 #pg25304 UoEO service(Business Layer) - user Management
 # hashlib provides hashing functions, such as sha256, which are used for securely hashing passwords.
-import hashlib
+import bcrypt
 from business.models import User
+from business.validators import validate_email, validate_password
 #UserService, which contains the business logic for handling user-related operations like registration and login
 
 class UserService:
@@ -10,7 +11,9 @@ class UserService:
         self.user_repo = user_repo
 
     def register(self, user_id, email, password):
-        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        validate_email(email) #validate the email format
+        validate_password(password)#validate the password strength
+        password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         """A new User object is created, using the user_id, email, and the hashed password (password_hash).
 Note: The User class must be defined elsewhere in the application for this to work."""
         user = User(user_id, email, password_hash)
@@ -27,10 +30,9 @@ Note: The User class must be defined elsewhere in the application for this to wo
             #If user is None (no user found with the given email), the method immediately
             # returns False, indicating a login failure.
             return False
-        #Hash the provided password to compare it with the stored password hash.
-        password_hash = hashlib.sha256(password.encode()).hexdigest()
-        #Compare the hashed password with the stored password hash.
-        return user.password_hash == password_hash
+
+        # Verify password using bcrypt's checkpw method
+        return bcrypt.checkpw(password.encode(), user.password_hash.encode())
 
 
 
