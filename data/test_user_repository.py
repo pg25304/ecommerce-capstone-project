@@ -1,5 +1,6 @@
 """Polymorphism allows you to swap repositories or add new ones that implement the same base
 class without modifying the rest of the code. For example, we’ll add a TestUserRepository for testing:"""
+import unittest
 from data.base_repository import BaseRepository
 
 class TestUserRepository(BaseRepository):

@@ -1,8 +1,13 @@
 # business/validators.py
 import re
+import html
+
+def sanitize_input(input_value):
+    """Escape special characters to prevent injection-based attacks."""
+    return html.escape(input_value)
 
 def validate_email(email):
-    # Use a regex to ensure email is valid
+    email = sanitize_input(email)  # Sanitize before validation
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if not re.match(email_regex, email):
         raise ValueError("Invalid email format")
