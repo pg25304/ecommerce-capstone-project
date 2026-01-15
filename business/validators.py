@@ -14,6 +14,7 @@ def validate_email(email):
 
 def validate_password(password):
     # Ensure password is strong enough
+    print("DEBUG: validate_password() called with:", password)  # Debug Statement
     if len(password) < 8:
         raise ValueError("Password must be at least 8 characters long")
     if not any(char.isupper() for char in password):
