@@ -1,3 +1,4 @@
+# Unit tests for OrderService
 import unittest
 from business.order_service import OrderService
 from data.order_repository import OrderRepository
@@ -17,16 +18,17 @@ class TestOrderService(unittest.TestCase):
     def test_create_order_success(self):
         user = User(user_id=1, email="test@example.com", password_hash="hashed_pass")
         order = self.order_service.create_order(
-            order_id=1, user=user, cart_items=[(1, 2)]  # Buy 2 laptops
+            user=user, cart_items={1: 2}  # Buy 2 laptops
         )
-        self.assertEqual(order.order_id, 1)
-        self.assertEqual(len(order.items), 1)  # One product in order
-        self.assertEqual(order.items[0][1], 2)  # Quantity should be 2
-        self.assertEqual(self.test_product.stock, 3)  # Stock reduced
+        self.assertEqual(order.order_id, 1)  # Check if order ID was assigned correctly
+        self.assertEqual(len(order.items), 1)  # One product in the order
+        self.assertEqual(order.items[0].quantity, 2)  # Quantity should be 2 for the first item
+        self.assertEqual(order.items[0].product_id, 1)  # Product ID should be 1
+        self.assertEqual(self.product_repo.find(1).stock, 3)  # Stock should be reduced by 2
 
     def test_create_order_insufficient_stock(self):
         user = User(user_id=1, email="test@example.com", password_hash="hashed_pass")
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):  # Expect ValueError to be raised
             self.order_service.create_order(
-                order_id=2, user=user, cart_items=[(1, 10)]  # Try to buy 10 laptops
+                user=user, cart_items={1: 10}  # Try to buy 10 laptops
             )
