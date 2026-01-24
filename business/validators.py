@@ -5,13 +5,13 @@ import html
 def sanitize_input(input_value):
     """Escape special characters to prevent injection-based attacks."""
     return html.escape(input_value)
-
+# Validate email format
 def validate_email(email):
     email = sanitize_input(email)  # Sanitize before validation
     email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     if not re.match(email_regex, email):
         raise ValueError("Invalid email format")
-
+# Validate password strength
 def validate_password(password):
     # Ensure password is strong enough
     print("DEBUG: validate_password() called with:", password)  # Debug Statement
