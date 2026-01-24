@@ -9,10 +9,14 @@ class UserController:
             self.user_service = user_service
     #This defines a method named register_user, which acts as a controller action for user registration.
     #It takes user_id, email, and password as input parameters coming from the external interface (UI, API, etc.)."""
+
+
         def register_user(self, user_id, email, password):
             try:
-                #This method calls the register_user method of UserService,
-                return self.user_service.register(user_id, email, password)
+                # Calls UserService's register method and gets the user object
+                user = self.user_service.register(user_id, email, password)
+                # Return a friendly message instead of the raw user object
+                return f"User '{user.email}' registered successfully!"
             except ValueError as e:
                 return f"Registration failed: {e}"  # Handle input validation errors
             except Exception as e:

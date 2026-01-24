@@ -18,3 +18,14 @@ class Order:
         self.order_id = order_id
         self.user = user
         self.items = items  # List of OrderItem objects
+
+    def total_price(self):
+        # Calculate the total price of the order based on the items
+        return sum(item.price * item.quantity for item in self.items)
+
+class OrderItem:
+    def __init__(self, product_id, name, price, quantity):
+        self.product_id = product_id
+        self.name = name
+        self.price = price
+        self.quantity = quantity
